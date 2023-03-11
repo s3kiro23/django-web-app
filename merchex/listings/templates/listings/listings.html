@@ -1,0 +1,14 @@
+{% extends 'listings/base.html' %}
+
+{% block title %}Liste des produits{% endblock %}
+
+{% block content %}
+<h1>Listes des marchandises</h1>
+    <p>Voici la liste de nos produits :</p>
+    <ul>
+        {% for item in listings_tab %}
+            <li>{{item.title}}</li>
+        {% endfor %}
+    </ul>
+    <span>L'année en cours est : {% now "Y"%}</span>
+{% endblock %}

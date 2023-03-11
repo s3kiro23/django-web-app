@@ -1,0 +1,14 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'bands/style.css' %}"/>
+</head>
+<body>
+
+{% block content %}{% endblock %}
+
+</body>
+</html>
