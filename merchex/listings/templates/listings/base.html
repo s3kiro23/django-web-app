@@ -8,6 +8,13 @@
 </head>
 <body>
 
+<nav>
+    <a href="{% url 'bands' %}">Groupes</a>
+    <a href="{% url 'listings' %}">Annonces</a>
+    <a href="{% url 'about' %}">À propos</a>
+    <a href="{% url 'contact' %}">Contact</a>
+</nav>
+
 {% block content %}{% endblock %}
 
 </body>

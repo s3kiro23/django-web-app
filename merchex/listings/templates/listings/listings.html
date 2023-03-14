@@ -1,14 +1,12 @@
 {% extends 'listings/base.html' %}
 
-{% block title %}Liste des produits{% endblock %}
+{% block title %}Annonces{% endblock %}
 
 {% block content %}
-<h1>Listes des marchandises</h1>
-    <p>Voici la liste de nos produits :</p>
+<h1>Listes des annonces</h1>
     <ul>
         {% for item in listings_tab %}
-            <li>{{item.title}}</li>
+            <li><a href="{% url 'listing-detail' item.id %}">{{item.title}}</a></li>
         {% endfor %}
     </ul>
-    <span>L'année en cours est : {% now "Y"%}</span>
 {% endblock %}

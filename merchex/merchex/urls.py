@@ -14,13 +14,32 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
 from django.urls import path
 from listings import views
 
+
+def response_error_handler(request, exception=None):
+    return HttpResponse('Error handler content', status=404)
+
+
+def permission_denied_view(request):
+    raise PermissionDenied
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', views.hello),
-    path('about-us', views.about),
-    path('listings', views.listings),
-    path('contact-us', views.contact),
+    path('bands/', views.band_list, name='bands'),
+    path('bands/<int:band_id>/', views.band_detail, name='band-detail'),
+    path('about-us/', views.about, name='about'),
+    path('listings/', views.listings, name='listings'),
+    path('listings/<int:listing_id>/', views.listing_detail, name='listing-detail'),
+    path('contact-us/', views.contact, name='contact'),
+    path('email-sent/', views.email_sent, name='email-sent'),
+    path('404/', permission_denied_view),
 ]
+
+handler404 = response_error_handler
+
+
