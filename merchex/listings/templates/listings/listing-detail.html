@@ -1,16 +1,32 @@
 {% extends 'listings/base.html' %}
 
 {% block content %}
-<h2>{{ listing.title }}</h2>
+<div class="container mt-5">
+    <div class="card w-50 mx-auto">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2>{{ listing.title }}</h2>
+        </div>
+        <div class="card-body p-4">
+            <ul>
+                <li>type : {{ listing.get_type_display }}</li>
+                <li>Vendu : {{ listing.sold|yesno }}</li>
+                <li>Année de création : {{ listing.year }}</li>
+                <li>Groupe lié : {{ listing.band }}</li>
+            </ul>
 
-<ul>
-    <li>type : {{ listing.get_type_display }}</li>
-    <li>Vendu : {{ listing.sold|yesno }}</li>
-    <li>Année de création : {{ listing.year }}</li>
-    <li>Groupe lié : {{ listing.band }}</li>
-</ul>
-
-<p>{{ band.description }}</p>
-
-<a href="{% url 'listings' %}"><button>Back</button></a>
+            <p>{{ listing.description }}</p>
+            <div>
+                <a class="btn btn-primary" href="{% url 'listing-change' listing.id %}">
+                    Modifier cette annonce
+                </a>
+                <a class="btn btn-outline-danger" href="{% url 'listing-delete' listing.id %}">
+                    Supprimer cette annonce
+                </a>
+                <a class="btn btn-light" href="{% url 'listings' %}">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

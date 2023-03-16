@@ -3,10 +3,27 @@
 {% block title %}Annonces{% endblock %}
 
 {% block content %}
-<h1>Listes des annonces</h1>
-    <ul>
-        {% for item in listings_tab %}
-            <li><a href="{% url 'listing-detail' item.id %}">{{item.title}}</a></li>
-        {% endfor %}
-    </ul>
+<div class="container mt-5">
+    <div class="card w-75 mx-auto">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h1>Listes des annonces</h1>
+            <a href="{% url 'listing-create' %}">
+                <button class="btn btn-outline-primary"><i class="fa-solid fa-plus"></i></button>
+            </a>
+        </div>
+        <div class="card-body">
+            <ul class="row gap-2">
+                {% for item in listings_tab %}
+                <li>
+                    <a href="{% url 'listing-detail' item.id %}">{{item.title}}</a>
+                    -
+                    <a class="me-2" href="{% url 'listing-change' item.id %}"><i
+                            class="fa-regular fa-pen-to-square"></i></a>
+                    <a href="{% url 'listing-delete' item.id %}"><i class="fa-solid fa-xmark text-danger"></i></a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

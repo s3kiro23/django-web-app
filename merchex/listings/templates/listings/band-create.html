@@ -1,0 +1,23 @@
+{% extends 'listings/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card w-50 mx-auto">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2>Création d'un groupe</h2>
+        </div>
+        <div class="card-body p-4">
+            <form action="" method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="mt-4">
+                    <input class="btn btn-outline-success" type="submit" value="Soumettre">
+                    <a class="btn btn-light" href="{% url 'bands' %}">
+                        Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

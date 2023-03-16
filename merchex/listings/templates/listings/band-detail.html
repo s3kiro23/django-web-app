@@ -1,29 +1,43 @@
 {% extends 'listings/base.html' %}
 
 {% block content %}
-<h2>{{ band.name }}</h2>
+<div class="container mt-5">
+    <div class="card w-50 mx-auto">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2>{{ band.name }}</h2>
+        </div>
+        <div class="card-body p-4">
+            <ul>
+                <li>Genre : {{ band.get_genre_display }}</li>
+                <li>Année de formation : {{ band.year_formed }}</li>
+                <li>Actif : {{ band.active|yesno }}</li>
+                {% if band.official_homepage %}
+                <li><a href="{{ band.official_homepage }}" target="_blank">{{ band.official_homepage }}</a></li>
+                {% endif %}
+            </ul>
 
-<ul>
-    <li>Genre : {{ band.get_genre_display }}</li>
-    <li>Année de formation : {{ band.year_formed }}</li>
-    <li>Actif : {{ band.active|yesno }}</li>
-    {% if band.official_homepage %}
-    <li><a href="{{ band.official_homepage }}" target="_blank">{{ band.official_homepage }}</a></li>
-    {% endif %}
-</ul>
+            <p>{{ band.biography }}</p>
 
-<p>{{ band.biography }}</p>
-
-{% if band.listing_set.all %}
-<h4>Liste des annonces liées au groupe :</h4>
-<ul>
-    {% for listing in band.listing_set.all %}
-    <li><a href="{% url 'listing-detail' listing.id %}">{{ listing.title }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-<a href="{% url 'bands' %}">
-    <button>Back</button>
-</a>
+            {% if band.listing_set.all %}
+            <h4>Liste des annonces liées au groupe :</h4>
+            <ul>
+                {% for listing in band.listing_set.all %}
+                <li><a href="{% url 'listing-detail' listing.id %}">{{ listing.title }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="mt-4">
+                <a class="btn btn-primary" href="{% url 'band-change' band.id %}">
+                    Modifier ce groupe
+                </a>
+                <a class="btn btn-outline-danger" href="{% url 'band-delete' band.id %}">
+                    Supprimer ce groupe
+                </a>
+                <a class="btn btn-light" href="{% url 'bands' %}">
+                    Retour
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

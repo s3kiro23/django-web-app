@@ -1,0 +1,18 @@
+{% extends 'listings/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card w-50 mx-auto">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h2>Supprimer le groupe</h2>
+        </div>
+        <div class="card-body p-4">
+            <p>Etes-vous sur de vouloir supprimer le groupe : {{ band.name }} ?</p>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input class="btn btn-outline-danger" type="submit" value="Supprimer ce groupe">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
