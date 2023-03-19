@@ -17,6 +17,8 @@ import authentication
 from django.contrib import admin, messages
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordResetView
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 import blog.views
 from authentication.views import CustomPasswordChangeView
@@ -37,5 +39,21 @@ urlpatterns = [
         success_url='/home/',
     ), name='change-password'),
     path('home/', blog.views.home, name='home'),
+    path('profile/', authentication.views.profile_page, name='profile_page'),
+    path('profile/edit/', authentication.views.edit_profile, name='edit_profile'),
+    path('account/disable/', authentication.views.disable_account, name='disable_account'),
+    path('follow-users/', blog.views.follow_users, name='follow_users'),
+    path('my-photos/', blog.views.my_photos, name='my_photos'),
+    path('photo/upload/', blog.views.photo_upload, name='photo_upload'),
+    path('photo/<int:photo_id>/', blog.views.photo_detail, name='photo_detail'),
+    path('photo/<int:photo_id>/edit', blog.views.edit_photo, name='edit_photo'),
+    path('photo/upload-multiple/', blog.views.create_multiple_photos, name='create_multiple_photos'),
+    path('profile/photo/upload', authentication.views.upload_profile_photo, name='profile_photo_upload'),
+    path('blog/create', blog.views.blog_and_photo_upload, name='blog_create'),
+    path('blog/<int:blog_id>', blog.views.view_blog, name='view_blog'),
+    path('blog/<int:blog_id>/edit', blog.views.edit_blog, name='edit_blog'),
     path('signup/', authentication.views.signup_page, name='signup'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

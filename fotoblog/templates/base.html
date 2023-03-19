@@ -32,7 +32,23 @@
         </div>
         <div class='collapse navbar-collapse order-2 d-lg-flex ms-lg-5' id='navbar-main'>
             <ul id="nav-items-gen" class='navbar-nav mt-3 mt-md-0 d-flex justify-content-center align-items-center'>
-                <!--Génération du menu en fonction du type de compte-->
+                {% if perms.blog.add_photo %}
+                <li class='nav-item m-0'>
+                    <a class='nav-link fw-bold' role='button' href="{% url 'blog_create' %}">Ecrire un post</a>
+                </li>
+                <li class='nav-item m-0'>
+                    <a class='nav-link fw-bold' role='button' href="{% url 'photo_upload' %}">Téléverser une photo</a>
+                </li>
+                <li class='nav-item m-0'>
+                    <a class='nav-link fw-bold' role='button' href="{% url 'create_multiple_photos' %}">Téléverser plusieurs photos</a>
+                </li>
+                <li class='nav-item m-0'>
+                    <a class='nav-link fw-bold' role='button' href="{% url 'my_photos' %}">Mes photos</a>
+                </li>
+                {% endif %}
+                <li class='nav-item m-0'>
+                    <a class='nav-link fw-bold' role='button' href="{% url 'follow_users' %}">Suivre des utilisateurs</a>
+                </li>
             </ul>
         </div>
         <div class='d-flex justify-content-end align-items-center order-1 order-lg-last me-xl-3'>
@@ -49,12 +65,15 @@
             <a class="text-decoration-none fw-bold" role="button" data-bs-toggle="dropdown">
                 <span class="first-name me-md-2">{{ request.user }}</span>
                 <img class="img-profile rounded-circle" width="55" height="55"
-                     src="https://picsum.photos/55" alt="55x55">
+                     src="{% if user.profile_pic %} {{ user.profile_pic.url }} {% else %} https://picsum.photos/55 {% endif %}"
+                     alt="55x55">
             </a>
             <ul class='dropdown-menu dropdown-menu-end animated--fade-in-up' id="profil_dropdown">
                 <li>
-                    <button class='dropdown-item' type='button'><i class="fa-solid fa-user fs--1 me-2"></i>Mon profil
-                    </button>
+                    <a class='dropdown-item' type='button' href="{% url 'profile_page' %}">
+                        <i class="fa-solid fa-user fs--1 me-2"></i>
+                        Mon profil
+                    </a>
                 </li>
                 <li>
                     <a class='dropdown-item' type='button' href="{% url 'change-password' %}"><i
