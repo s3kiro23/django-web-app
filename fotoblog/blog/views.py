@@ -1,4 +1,8 @@
+from itertools import chain
+
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.forms import formset_factory
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
@@ -8,11 +12,43 @@ from . import models
 
 @login_required
 def home(request):
-    blogs = models.Blog.objects.all()
+    blogs = models.Blog.objects.filter(
+        Q(contributors__in=request.user.follows.all()) |
+        Q(starred=True))
+    photos = models.Photo.objects.filter(
+        uploader__in=request.user.follows.all(),
+    ).exclude(blog__in=blogs)
+    blogs_and_photos = sorted(
+        chain(blogs, photos),
+        key=lambda instance: instance.date_created,
+        reverse=True
+    )
+
+    paginator = Paginator(blogs_and_photos, 6)
+    page = request.GET.get('page')
+
+    page_obj = paginator.get_page(page)
+
+    context = {
+        'page_obj': page_obj,
+    }
     return render(
         request,
         'blog/home.html',
-        context={'blogs': blogs}
+        context=context
+    )
+
+
+def photo_feed(request):
+    photos = models.Photo.objects.filter(
+        uploader__in=request.user.follows.all()
+    ).order_by('-date_created')
+    return render(
+        request,
+        'blog/photo_feed.html',
+        context={
+            'photos': photos,
+        }
     )
 
 
@@ -35,12 +71,19 @@ def follow_users(request):
 @permission_required('blog.add_photo', raise_exception=True)
 def my_photos(request):
     photos = models.Photo.objects.filter(uploader=request.user)
+
+    paginator = Paginator(photos, 6)
+    page = request.GET.get('page')
+
+    page_obj = paginator.get_page(page)
+
+    context = {
+        'page_obj': page_obj,
+    }
     return render(
         request,
         'blog/my_photos.html',
-        context={
-            'photos': photos,
-        }
+        context=context
     )
 
 
@@ -73,11 +116,8 @@ def edit_photo(request, photo_id):
     if request.method == 'POST':
         if 'edit_photo' in request.POST:
             edit_form = forms.PhotoForm(request.POST, request.FILES, instance=photo)
-            print(request.POST)
             if edit_form.is_valid():
-                photo = edit_form.save(commit=False)
-                photo.image = request.POST.get('image')
-                photo.save()
+                edit_form.save()
                 return redirect('my_photos')
         if 'delete_photo' in request.POST:
             delete_form = forms.DeletePhotoForm(request.POST)
@@ -156,14 +196,20 @@ def edit_blog(request, blog_id):
 
 
 @login_required
-@permission_required('blog.add_photo', raise_exception=True)
+@permission_required('blog.add_photo')
 def create_multiple_photos(request):
     PhotoFormSet = formset_factory(forms.PhotoForm, extra=5)
     formset = PhotoFormSet()
     if request.method == 'POST':
+        print("post")
+        formset = PhotoFormSet(request.POST, request.FILES)
+        print(formset)
         if formset.is_valid():
+            print("isvalid")
             for form in formset:
+                print(2)
                 if form.cleaned_data:
+                    print(3)
                     photo = form.save(commit=False)
                     photo.uploader = request.user
                     photo.save()

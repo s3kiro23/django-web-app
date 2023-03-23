@@ -10,7 +10,7 @@
         </div>
 
         <div class="card-body">
-            <form method="post">
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ edit_form.as_p }}
                 <button class="d-flex btn btn-primary" type="submit">Sauvegarder</button>

@@ -163,3 +163,10 @@
 #profil_dropdown {
 	margin-right: 2% !important;
 }
+
+.bg-image-cover {
+    background-image: url(img/app_photo_one_line.png)
+    background-repeat: no
+    background-position:center
+}
+

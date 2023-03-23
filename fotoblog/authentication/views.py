@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -44,6 +45,7 @@ def disable_account(request):
     return redirect('login')
 
 
+@login_required
 def upload_profile_photo(request):
     form = forms.UploadProfilePhotoForm(instance=request.user)
     if request.method == 'POST':
@@ -54,6 +56,7 @@ def upload_profile_photo(request):
     return render(request, 'authentication/upload-profile-photo.html', context={'form': form})
 
 
+@login_required
 def profile_page(request):
     User = request.user
     return render(
@@ -63,13 +66,14 @@ def profile_page(request):
     )
 
 
+@login_required
 def edit_profile(request):
     form = forms.ProfileForm(instance=request.user)
     if request.method == 'POST':
         form = forms.ProfileForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('home')
+            return redirect('profile_page')
     return render(
         request,
         'authentication/edit_profile.html',

@@ -1,25 +1,33 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load blog_extras %}
 
 {% block title %}Home{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row">
-        <h2 class="mb-5">Blog</h2>
-        {% for blog in blogs %}
-        <div class="col-4">
-            <a href="{% url 'view_blog' blog.id %}">
-                <div class="card bg-dark text-white">
-                    <img src="{{ blog.photo.image.url }}" class="card-img" alt="...">
-                </div>
-            </a>
-            <div class="text-center mt-2">
-                <h5 class="card-title fw-bold">{{ blog.title }}</h5>
-                <p class="card-text fw-bold">Ajouté le {{ blog.date_created }} | Nombre de mots : {{ blog.word_count }}</p>
-            </div>
-        </div>
+        <h2>Votre flux</h2>
+        {% for instance in page_obj %}
+            {% if instance|model_type == 'Blog' %}
+                {% include 'blog/partials/blog_snippet.html' with blog=instance %}
+            {% elif instance|model_type == 'Photo' %}
+                {% include 'blog/partials/photo_snippet.html' with photo=instance %}
+            {% endif %}
         {% endfor %}
     </div>
+    <span class="d-flex justify-content-center gap-3 mt-5">
+        {% if page_obj.has_previous %}
+            <a href="?page=1"><< première</a>
+            <a href="?page={{ page_obj.previous_page_number }}">précédente</a>
+        {% endif %}
+        <span>
+            Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+        </span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">suivante</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">dernière >></a>
+        {% endif %}
+    </span>
 </div>
 {% endblock %}

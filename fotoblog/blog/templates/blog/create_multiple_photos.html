@@ -10,11 +10,8 @@
         </div>
         <div class="card-body">
             <form method="post" enctype="multipart/form-data">
-                {{ form.management_form }}
+                {{ formset.as_p }}
                 {% csrf_token %}
-                {% for form in formset %}
-                {{ form.as_p }}
-                {% endfor %}
                 <button class="d-flex btn btn-primary" type="submit">Publier</button>
             </form>
         </div>

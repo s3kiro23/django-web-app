@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 from django.db import models
 
 from blog.models import Blog
@@ -23,6 +23,15 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.role == self.CREATOR:
+            group = Group.objects.get(name='creators')
+            group.user_set.add(self)
+        elif self.role == self.SUBSCRIBER:
+            group = Group.objects.get(name='subscribers')
+            group.user_set.add(self)
 
     def __str__(self):
         return self.username
